@@ -1,63 +1,65 @@
-// Tenemos un li de productos
+// Tenemos una "lista desordenada" de productos
 
 const productos = [
-  {nombre: "Zapato negro", tipo: "zapato", color: "negro", img: "./taco-negro.jpg"},
-  {nombre: "Zapato azul", tipo: "zapato", color: "azul", img: "./taco-azul.jpg"},
-  {nombre: "Bota negra", tipo: "bota", color: "negro", img: "./bota-negra.jpg"},
-  {nombre: "Bota azul", tipo: "bota", color: "azul", img: "./bota-azul.jpg"},
-  {nombre: "Zapato rojo", tipo: "zapato", color: "rojo", img: "./zapato-rojo.jpg"}
-]
+  { nombre: "Zapato negro", tipo: "zapato", color: "negro", img: "./taco-negro.jpg" },
+  { nombre: "Zapato azul", tipo: "zapato", color: "azul", img: "./taco-azul.jpg" },
+  { nombre: "Bota negra", tipo: "bota", color: "negro", img: "./bota-negra.jpg" },
+  { nombre: "Bota azul", tipo: "bota", color: "azul", img: "./bota-azul.jpg" },
+  { nombre: "Zapato rojo", tipo: "zapato", color: "rojo", img: "./zapato-rojo.jpg" }
 
-const li = document.getElementsByName("lista-de-productos")
-const $i = document.querySelector('.input');
+];
 
-for (let i = 0; i < productos.length; i++) {
-  var d = document.createElement("div")
-  d.classList.add("producto")
+// Se corrigió el método para obtener el contenedor de nuestra lista de productos
+const listaDeProductos = document.getElementById('lista-de-productos');
+// Se cambió el método para obtener el input de búsqueda
+const input = document.getElementById('filtro');
+// Se corrigió el identificador de nuestro botón de filtro
+const botonFiltrar = document.getElementById('filtrar');
+// Se le añadió funcioanlidad al identificador de nuestro botón de filtro
+const botonResetear = document.getElementById('resetear');
 
-  var ti = document.createElement("p")
-  ti.classList.add("titulo")
-  ti.textContent = productos[i].nombre
-  
-  var imagen = document.createElement("img");
-  imagen.setAttribute('src', productos[i].img);
+// Se realizó una función para mostrar productos
+function mostrarProductos(lista) {
+  listaDeProductos.innerHTML = ''; // Limpiar contenido anterior
+  lista.forEach(producto => {
+    const div = document.createElement('div');
+    div.classList.add('producto');
 
-  d.appendChild(ti)
-  d.appendChild(imagen)
+    const nombre = document.createElement('p');
+    nombre.textContent = `${producto.nombre} - ${producto.tipo} - ${producto.color}`;
 
-  li.appendChild(d)
+    const imagen = document.createElement('img');
+    imagen.setAttribute('src', producto.img);
+    imagen.setAttribute('alt', producto.nombre);
+
+    div.appendChild(nombre);
+    div.appendChild(imagen);
+
+    listaDeProductos.appendChild(div);
+  }
+);
 }
 
-displayProductos(productos)
-const botonDeFiltro = document.querySelector("button");
+// Mostramos los productos
+mostrarProductos(productos);
 
-botonDeFiltro.onclick = function() {
-  while (li.firstChild) {
-    li.removeChild(li.firstChild);
-  }
-
-  const texto = $i.value;
-  console.log(texto);
-  const productosFiltrados = filtrado(productos, texto );
-
-  for (let i = 0; i < productosFiltrados.length; i++) {
-    var d = document.createElement("div")
-    d.classList.add("producto")
-  
-    var ti = document.createElement("p")
-    ti.classList.add("titulo")
-    ti.textContent = productosFiltrados[i].nombre
-    
-    var imagen = document.createElement("img");
-    imagen.setAttribute('src', productosFiltrados[i].img);
-  
-    d.appendChild(ti)
-    d.appendChild(imagen)
-  
-    li.appendChild(d)
-  }
+// Creamos un evento para filtrar productos
+botonFiltrar.addEventListener('click', () => {
+  const texto = input.value.toLowerCase();
+  const productosFiltrados = productos.filter(producto =>
+    producto.nombre.toLowerCase().includes(texto) ||
+    producto.tipo.toLowerCase().includes(texto) ||
+    producto.color.toLowerCase().includes(texto)
+  );
+  mostrarProductos(productosFiltrados);
 }
 
-const filtrado = (productos = [], texto) => {
-  return productos.filter(item => item.tipo.includes(texto) || item.color.includes(texto));
-}  
+);
+
+// Hscemos otro evento para resetear el filtro
+botonResetear.addEventListener('click', () => {
+  input.value = '';
+  mostrarProductos(productos);
+}
+
+);
